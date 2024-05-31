@@ -67,48 +67,100 @@ app.listenServer();
 
 O cliente é uma aplicação web que utiliza HTML e JavaScript, com a biblioteca Socket.IO para se comunicar com o servidor.
 
-**Código do Cliente (inserido no arquivo HTML):**
+**Código do Cliente:**
 
-```javascript
-<script type="module">
-  // Importa o módulo socket.io do CDN
-  import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+          margin: 0;
+          padding-bottom: 3rem;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            Helvetica, Arial, sans-serif;
+        }
+  
+        #form {
+          background: rgba(0, 0, 0, 0.15);
+          padding: 0.25rem;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          height: 3rem;
+          box-sizing: border-box;
+          backdrop-filter: blur(10px);
+        }
+        #input {
+          border: none;
+          padding: 0 1rem;
+          flex-grow: 1;
+          border-radius: 2rem;
+          margin: 0.25rem;
+        }
+        #input:focus {
+          outline: none;
+        }
+        #form > button {
+          background: #333;
+          border: none;
+          padding: 0 1rem;
+          margin: 0.25rem;
+          border-radius: 3px;
+          outline: none;
+          color: #fff;
+        }
+  
+        #messages {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+        }
+        #messages > li {
+          padding: 0.5rem 1rem;
+        }
+        #messages > li:nth-child(odd) {
+          background: #efefef;
+        }
+      </style>
+    </head>
+    <body>
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+      </form>
 
-  // Conecta ao servidor Socket.IO
-  const socket = io();
-
-  // Seleciona os elementos HTML necessários
-  const messageList = document.getElementById('messages'); // Lista de mensagens
-  const messageInput = document.getElementById('input'); // Campo de entrada de mensagem
-  const messageForm = document.getElementById('form'); // Formulário de envio de mensagem
-
-  // Adiciona um evento de envio ao formulário
-  messageForm.addEventListener('submit', (event) => { // Adiciona um evento de envio ao formulário
-    event.preventDefault(); // Previne o comportamento padrão de envio do formulário
-
-    // Obtém o conteúdo da mensagem e remove espaços em branco das extremidades
-    const messageContent = messageInput.value.trim();
-
-    // Verifica se a mensagem não está vazia
-    if (messageContent) {
-      // Emite o evento 'message' para o servidor com o conteúdo da mensagem
-      socket.emit('message', { message: messageContent });
-
-      // Limpa o campo de entrada de mensagem
-      messageInput.value = '';
-    }
-  });
-
-  // Adiciona um ouvinte para o evento 'message' recebido do servidor
-  socket.on('message', (data) => {
-    // Cria um novo item de lista para a mensagem recebida
-    const messageItem = document.createElement('li');
-    // Define o texto do item de lista como o conteúdo da mensagem
-    messageItem.textContent = data.message;
-    // Adiciona o item de lista à lista de mensagens
-    messageList.appendChild(messageItem);
-  });
-</script>
+      <script type="module">
+        import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
+      
+        const socket = io();
+        const messageList = document.getElementById('messages');
+        const messageInput = document.getElementById('input');
+        const messageForm = document.getElementById('form');
+      
+        messageForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const messageContent = messageInput.value.trim();
+          if (messageContent) {
+            socket.emit('message', { message: messageContent });
+            messageInput.value = '';
+          }
+        });
+      
+        socket.on('message', (data) => {
+          const messageItem = document.createElement('li');
+          messageItem.textContent = data.message;
+          messageList.appendChild(messageItem);
+        });
+      </script>
+      
+</body>
+</html>
 ```
 
 #### 3. Processo de Desenvolvimento
