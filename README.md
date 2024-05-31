@@ -69,7 +69,7 @@ O cliente é uma aplicação web que utiliza HTML e JavaScript, com a biblioteca
 
 **Código do Cliente (inserido no arquivo HTML):**
 
-```javascript
+```html
 <script type="module">
   // Importa o módulo socket.io do CDN
   import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
